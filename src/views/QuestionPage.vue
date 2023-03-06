@@ -1,3 +1,14 @@
+<script setup>
+import BaseTitle from "@/components/BaseTitle.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const categoryID = route.params.id;
+</script>
+
 <template>
-     <h1 class="text-6xl font-thin text-slate-800">I'm Other Page</h1>
+  <BaseTitle>
+     I'm Question Page for {{ categoryID }}
+  </BaseTitle>
 </template>
