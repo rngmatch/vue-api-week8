@@ -1,14 +1,29 @@
 <script setup>
-import BaseTitle from "@/components/BaseTitle.vue";
+import { watch, ref } from 'vue'
 import { useRoute } from "vue-router";
 
-const route = useRoute();
+import useAPI from '@/composables/useAPI.js';
+import BaseTitle from "@/components/BaseTitle.vue";
 
-const categoryID = route.params.id;
+const route = useRoute();
+const api = useAPI()
+const question = ref(null)
+
+onMounted(async () => {
+      question.value = await api.getQuestion(route.params.id)
+})  
 </script>
 
 <template>
-  <BaseTitle>
-     I'm Question Page for {{ categoryID }}
-  </BaseTitle>
+  <div v-if="question">
+  <BaseTitle> {{ question.category }} </BaseTitle>
+  <p class="question">{{ question.question }}</p>
+  <pre>{{ question }}</pre>
+  </div>
 </template>
+
+<style lang="postcss" scoped>
+.question{
+  @apply text-center text-2xl font-bold;
+}
+</style>
