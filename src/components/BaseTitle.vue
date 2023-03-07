@@ -16,7 +16,7 @@
     @apply h-16 w-16;
   }
   & .title {
-    @apply text-6xl font-thin uppercase tracking-widest text-slate-700;
+    @apply text-6xl text-center font-thin uppercase tracking-widest text-slate-700;
   }
 }
 
