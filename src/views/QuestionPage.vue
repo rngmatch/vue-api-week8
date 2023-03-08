@@ -1,8 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+
 import useAPI from '@/composables/useAPI'
 import useColor from '@/composables/useColor'
+import useScore from '@/composables/useScore'
 import BaseTitle from '@/components/BaseTitle.vue'
 
 const route = useRoute()
@@ -10,6 +12,8 @@ const colors = useColor()
 const api = useAPI()
 const question = ref(null)
 const answers = ref([])
+const { changeScore } = useScore()
+
 onMounted(async () => {
   question.value = await api.getQuestion(route.params.id)
   answers.value.push({
