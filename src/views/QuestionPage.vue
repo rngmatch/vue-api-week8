@@ -6,6 +6,7 @@ import useAPI from '@/composables/useAPI'
 import useColor from '@/composables/useColor'
 import useScore from '@/composables/useScore'
 import BaseTitle from '@/components/BaseTitle.vue'
+import DifficultyChip from '@/components/DifficultyChip.vue'
 
 const route = useRoute()
 const colors = useColor()
@@ -20,12 +21,16 @@ onMounted(async () => {
     id: answers.value.length,
     correct: true,
     answer: question.value.correct_answer,
+          points: question.value.difficulty === 'easy' ? 10 :
+              question.value.difficulty === 'medium' ? 20 : 30
   })
   question.value.incorrect_answers.map((answer) => {
     answers.value.push({
       id: answers.value.length,
       correct: false,
       answer,
+      points: -5,
+
     })
   })
 })
@@ -36,9 +41,11 @@ onMounted(async () => {
     <BaseTitle> {{ question.category }}</BaseTitle>
     <p class="question">{{ question.question }}</p>
     <div class="answers">
-      <div v-for="answer in answers" :key="answer.id" :class="colors.getColor(answer.id)" class="answer">
+      <div v-for="answer in answers" :key="answer.id" :class="colors.getColor(answer.id)" class="answer" 
+        @click="changeScore(answer.points)">
         {{ answer.answer }}
       </div>
+      <DifficultyChip />{{ question.difficulty }}
     </div>
   </div>
   <div v-else class="loading">Loading...</div>
@@ -54,6 +61,9 @@ onMounted(async () => {
     @apply grid w-full flex-grow grid-cols-2 gap-8;
     & .answer {
       @apply flex items-center justify-center rounded-lg text-center text-4xl text-white;
+      &:hover {
+        @apply cursor-pointer;
+      }
     }
   }
 }
