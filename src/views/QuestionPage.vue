@@ -1,19 +1,32 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { shuffle } from 'lodash-es'
+
+import NotificationAnswers from '@/components/NotificationAnswers.vue'
 
 import useAPI from '@/composables/useAPI'
 import useColor from '@/composables/useColor'
 import useScore from '@/composables/useScore'
 import BaseTitle from '@/components/BaseTitle.vue'
 import DifficultyChip from '@/components/DifficultyChip.vue'
-
+const router = useRouter()
 const route = useRoute()
 const colors = useColor()
 const api = useAPI()
 const question = ref(null)
 const answers = ref([])
+const showNotification = ref(false)
+
 const { changeScore } = useScore()
+const handleAnswer = (points) => {
+  isCorrect.value = points > 0
+  showNotification.value = true
+  setTimeout(() => {
+    changeScore(points)
+    router.push('/')
+  }, 1000)
+}
 
 onMounted(async () => {
   question.value = await api.getQuestion(route.params.id)
@@ -21,8 +34,7 @@ onMounted(async () => {
     id: answers.value.length,
     correct: true,
     answer: question.value.correct_answer,
-          points: question.value.difficulty === 'easy' ? 10 :
-              question.value.difficulty === 'medium' ? 20 : 30
+          points: question.value.difficulty === 'easy' ? 10 : question.value.difficulty === 'medium' ? 20 : 30
   })
   question.value.incorrect_answers.map((answer) => {
     answers.value.push({
@@ -30,25 +42,24 @@ onMounted(async () => {
       correct: false,
       answer,
       points: -5,
-
     })
   })
+  console.asser.log(shuffle(answers.value))
 })
 </script>
 
 <template>
   <div v-if="question" class="question-container">
     <BaseTitle> {{ question.category }}</BaseTitle>
-    <p class="question">{{ question.question }}</p>
+    <p class="question" v-html="question.question" />
     <div class="answers">
-      <div v-for="answer in answers" :key="answer.id" :class="colors.getColor(answer.id)" class="answer" 
-        @click="changeScore(answer.points)">
-        {{ answer.answer }}
-      </div>
-      <DifficultyChip />{{ question.difficulty }}
+      <div v-for="answer in answers" :key="answer.id" :class="colors.getColor(answer.id)" class="answer"
+        @click="handleAnswer(answer.points)" v-html="answer.answer" />
     </div>
+    <DifficultyChip :difficulty="question.difficulty" />
   </div>
   <div v-else class="loading">Loading...</div>
+  <NotificationAnswers v-if="showNotification" :correct="isCorrect" />
 </template>
 
 <style lang="postcss" scoped>
