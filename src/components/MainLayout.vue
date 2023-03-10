@@ -1,5 +1,5 @@
 <script setup>
-import MainScore from "@/components/MainScore.vue"
+import MainScore from '@/components/MainScore.vue'
 </script>
 
 <template>
@@ -8,7 +8,7 @@ import MainScore from "@/components/MainScore.vue"
       <RouterView />
     </div>
   </main>
- <MainScore />
+  <MainScore />
 </template>
 
 <style lang="postcss" scoped>

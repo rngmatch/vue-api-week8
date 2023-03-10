@@ -1,23 +1,21 @@
-  <template>
+<template>
   <div class="brand">
     <slot name="logo" />
     <h1 class="title">
-    <slot />
-    </h1>    
+      <slot />
+    </h1>
     <slot name="logo" />
   </div>
-  </template>
+</template>
 
-  <style lang="postcss" scoped>
+<style lang="postcss" scoped>
 .brand {
   @apply flex items-center justify-center gap-4;
-
   & :slotted(img) {
     @apply h-16 w-16;
   }
   & .title {
-    @apply text-6xl text-center font-thin uppercase tracking-widest text-slate-700;
+    @apply text-center text-6xl font-thin uppercase tracking-widest text-slate-700;
   }
 }
-
 </style>
